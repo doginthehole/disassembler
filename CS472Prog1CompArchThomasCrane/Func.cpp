@@ -2,16 +2,16 @@
 // or
 //have two different if statements that return an array of the different registers, opcodes, func, or offset
 int bitmask() {
-
+	return 0;
 }
 
 //to be called in each of the bitmask for loops
 int bitToHex(int) {
-
+	return 0;
 }
 
 //gotta remember to do that thing of making the offset 18 bits
 //you don't need the last two bits as they're always zero, it increments in 4
 int offsetFunc() {
-
+	return 0;
 }
