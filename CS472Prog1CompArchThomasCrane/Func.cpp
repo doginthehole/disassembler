@@ -13,5 +13,6 @@ int bitToHex(int) {
 //gotta remember to do that thing of making the offset 18 bits
 //you don't need the last two bits as they're always zero, it increments in 4
 int offsetFunc() {
+	short offset = 0;
 	return 0;
 }
