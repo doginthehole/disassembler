@@ -1,4 +1,5 @@
 #include <iostream>
+#include <bitset>
 using namespace std;
 
 
@@ -31,32 +32,36 @@ int offsetFunc() {
 
 int main() {
 	//initializing values
-	int instruction = 0x8E59FFF0;
-
+	int instruction = 0x0000000D;
+	//bin 0000... 1101
+	//dec 13
 	int rFormat[5] = { 100000 ,100010 ,100101 ,101010 };
 	int iFormat[5] = { 100011 ,101011 ,000100 ,000101 ,100100 };
 
+	bitset<32> test(0x0000000D);
+	cout << test << endl;
+
 	//User prompt
-	cout << "hello world" << endl;
-	cout << "Input the MIPS 32bit instruction, without the 0x" << endl;
+	//cout << "hello world" << endl;
+	//cout << dec << instruction << endl;
 	
-	for(int i = 0; i < 4; i++)
-		if (instruction == NULL)
-		{
-			cout << "No input, restart." << endl;
-			return 0;
-		}
-		else if (instruction == rFormat[i])
-		{
-			//goto r format function
-		}
-		else if (instruction == iFormat[i])
-		{
-			//goto i format function
-		}
+	//for(int i = 0; i < 4; i++)
+	//	if (instruction == NULL)
+	//	{
+	//		cout << "No input, restart." << endl;
+	//		return 0;
+	//	}
+	//	else if (instruction == iFormat[i])
+	//	{
+	//		//goto r format function
+	//	}
+	//	else if (instruction == rFormat[i])
+	//	{
+	//		//goto i format function
+	//	}
 
 	//output - must include address and instruction
-	cout << "Address - " << "Instruction - " << endl;
+	//cout << "Address - " << "Instruction - " << endl;
 }
 
 /*Notes
@@ -70,13 +75,4 @@ sw 101011 I
 beq 000100 I
 bne 000101 I
 andi 100100 I
-
-
-
-
-
-
-
-
-
 */
