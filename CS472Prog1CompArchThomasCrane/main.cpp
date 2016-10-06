@@ -1,122 +1,129 @@
+///////////////////////////////////////////////////////////////////////////////
+/*
+Programmer: Thomas Crane
+Class: Computer Architecture 
+Project 1: MIPS Disassembler
+
+Summary: This program takes a MIPS instruction command and breaks it down
+to it's basic function. It recognizes only I and R format, not J, and only
+accepts opp codes: add, sub, or, slt, and, lw, sw, beq, bne
+An opp code outside of this range will terminate the program.
+*/
+///////////////////////////////////////////////////////////////////////////////
+
 #include <iostream>
 #include <bitset>
 using namespace std;
-
-
-
-//if statements for all of the registers with return functions in each
-// or
-//have two different if statements that return an array of the different registers, opcodes, func, or offset
-int bitmask() 
+//Return true if bits 32-25 bits are 0
+bool rCheck(int instruction_f)
 {
-	return 0;
+	int value = instruction_f & 0xFC000000;
+	if (value == 0x000000)
+		return true;
 }
-
-//to be called in each of the bitmask for loops
-int bitToHex(int) 
+//take in the entire instruction, range of bits, and length of bitshift
+int bitShift(int instruction_f, int range, int shift)
 {
-	return 0;
-}
-
-//gotta remember to do that thing of making the offset 18 bits
-//you don't need the last two bits as they're always zero, it increments in 4
-//only i format
-int offsetFunc() 
-{
-	short offset = 0;
-	return 0;
-}
-
-//R format
-void rFormatf()
-{
-
-	cout << "I made it!" << endl;
-
-
-}
-
-
-//I format
-
-void iFormatf() 
-{
-
-
-
-
-}
-
-bitset<32> bitReturn(int start, int finish, bitset<32> bits)
-{
-	bitset<32> rValue;
-
-	int len = start - finish;
-	while (len != 0)
+	//This isn't the most professional but if the scope of the project was large then I would create a dedicated and better function
+	if (range == 4)
+		range = 0xf;
+	else if (range== 3)
+		range = 0x7;
+	else if (range == 16)
+		range = 0xffff;
+	else if (range == 5)
+		range = 0x1f;
+	else if (range == 6)
+		range = 0x3f;	
+	else
 	{
-		rValue[len] = bits[finish];
-		finish--;
-		len--;
+		cout << "range is outside of range" << endl;
+		return 0;
+	}
+	instruction_f = instruction_f >> shift;
+	int value = instruction_f & range;
+	return value;
+}
+//R format
+void rFormatf(int instruction_f)
+{
+	//Check opp code and assign name to string
+	int oppCode = bitShift(instruction_f, 6, 0);
+	string oppCode_s = " ";
+	if (oppCode == 0x20)
+		oppCode_s = "Add";
+	else if (oppCode == 0x22)
+		oppCode_s = "Sub";
+	else if (oppCode == 0x25)
+		oppCode_s = "Or";
+	else if (oppCode == 0x2A)
+		oppCode_s = "Slt";
+	else if (oppCode == 0x24)
+		oppCode_s = "And";
+	else
+	{
+		cout << "Opp Code not recognized." << endl;
+		exit(0);
 	}
 
-	return rValue;
-}
+	int firstVar = bitShift(instruction_f, 3, 11);
+	int secondVar = bitShift(instruction_f, 3, 21);
+	int thirdVar = bitShift(instruction_f, 3, 16);
 
-bitset<6> oppf(bitset<32> instruction) 
+	//Instruction printout
+	cout << "the oppCode is: " << oppCode_s << endl;
+	cout << "First variable is $" << hex << firstVar << endl;
+	cout << "Second variable is $" << hex << secondVar << endl;
+	cout << "Third variable is $" << hex << thirdVar << endl;
+	cout << "Complete Instruction: " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar << " $" << hex << thirdVar << endl;
+
+}
+//I format
+void iFormatf(int instruction_f) 
 {
-	int cnt = 5;
-	//bitset<6> rValue;
+	//Check opp code and assign name to string
+	int oppCode = bitShift(instruction_f, 6, 26);
+	string oppCode_s = " ";
+	if (oppCode == 0x23)
+		oppCode_s = "Lw";
+	else if (oppCode == 0x2B)
+		oppCode_s = "Sw";
+	else if (oppCode == 0x4)
+		oppCode_s = "Beq";
+	else if (oppCode == 0x5)
+		oppCode_s = "Bne";
+	else
+	{
+		cout << "Opp Code not recognized." << endl;
+		exit(0);
+	}
 	
-	bitset<32> oppCode = bitReturn(32, 26, instruction);
-	return 0;
+	int offset = bitShift(instruction_f, 16, 0);
+	int firstVar = bitShift(instruction_f, 4, 16);
+	int secondVar = bitShift(instruction_f, 4, 21);
+	
+	//Instruction printout
+	//I print this in the format that was described by the instructions but I am aware that some print the offset after the values, just sayin'
+	cout << "First variable is $" << hex << firstVar << endl;
+	cout << "Offset = 0x" << hex << offset << endl;
+	cout << "Second variable is $" << hex << secondVar << endl;
+	cout << "Complete Instruction: " << oppCode_s << " $" << hex << firstVar << " 0x" << hex << offset << " $" << hex << secondVar << endl;
 }
-
-
+//main
 int main()
 {
-	//initializing values
-	bitset<32> instruction (string("10101010101010101010101010101010101")) ;
-	//bin 0000... 1101
-	//dec 13 asdf
+	int instruction = 0;
+	cout << "Enter the hex 32bit MIPS instruction: ";
+	cin >> hex >> instruction;
 
+	//the isntruction can also be placed here
+	//int instruction = 0x158FFFF6;
 
-	bitset<6> rFormatOpp[5]{ 0 ,100010 ,100101 ,101010 };
-	bitset<6> iFormatOpp[5]{ 100011 ,101011 ,000100 ,000101 ,100100 };
-	//cout << test << endl;
+	cout << "The hex instruction entered was: " << hex << instruction << endl;
+	//Check offset for 000000 and if return is true then the instruction is R format.
+	if (rCheck(instruction))
+		rFormatf(instruction);
+	iFormatf(instruction);
 
-	//User prompt
-	//cout << "hello world" << endl;
-	//cout << dec << instruction << endl;
-
-	for (int i = 0; i < 4; i++)
-		if (instruction == NULL)
-		{
-			cout << "No input, restart." << endl;
-			return 0;
-		}
-		else if (oppf(instruction) == iFormatOpp[i])
-		{
-
-
-		}
-		else if (oppf(instruction) == rFormatOpp[i])
-		{
-			rFormatf;
-		}
-
-	//output - must include address and instruction
-	//cout << "Address - " << "Instruction - " << endl;
+	return 0;
 }
-
-/*Notes
-Op codes
-add 100000 R
-sub 100010 R
-or 100101 R
-slt 101010 R
-lw 100011 I
-sw 101011 I
-beq 000100 I
-bne 000101 I
-andi 100100 I
-*/
