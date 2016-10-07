@@ -14,6 +14,9 @@ An opp code outside of this range will terminate the program.
 #include <iostream>
 #include <bitset>
 using namespace std;
+
+//Global Variable of program counter
+int progCounter = 0x7A060;
 //Return true if bits 32-25 bits are 0
 bool rCheck(int instruction_f)
 {
@@ -47,6 +50,9 @@ int bitShift(int instruction_f, int range, int shift)
 //R format
 void rFormatf(int instruction_f)
 {
+	//decompress program counter
+	progCounter = progCounter << 2;
+
 	//Check opp code and assign name to string
 	int oppCode = bitShift(instruction_f, 6, 0);
 	string oppCode_s = " ";
@@ -66,21 +72,29 @@ void rFormatf(int instruction_f)
 		exit(0);
 	}
 
-	int firstVar = bitShift(instruction_f, 3, 11);
-	int secondVar = bitShift(instruction_f, 3, 21);
-	int thirdVar = bitShift(instruction_f, 3, 16);
+	int firstVar = bitShift(instruction_f, 5, 11);
+	int secondVar = bitShift(instruction_f, 5, 21);
+	int thirdVar = bitShift(instruction_f, 5, 16);
 
 	//Instruction printout
 	cout << "the oppCode is: " << oppCode_s << endl;
-	cout << "First variable is $" << hex << firstVar << endl;
-	cout << "Second variable is $" << hex << secondVar << endl;
-	cout << "Third variable is $" << hex << thirdVar << endl;
-	cout << "Complete Instruction: " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar << " $" << hex << thirdVar << endl;
-
+	cout << "First variable is $" << dec << firstVar << endl;
+	cout << "Second variable is $" << dec << secondVar << endl;
+	cout << "Third variable is $" << dec << thirdVar << endl;
+	cout << "Complete Instruction: " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar << " $" << dec << thirdVar << endl;
+	cout << "Program counter at: " << progCounter << endl << endl;
+	//increment the program counter
+	progCounter = progCounter + 0x4;
+	//compress program counter
+	progCounter = progCounter >> 2;
+	int main();
 }
 //I format
 void iFormatf(int instruction_f) 
 {
+	//decompress program counter
+	progCounter = progCounter << 2;
+
 	//Check opp code and assign name to string
 	int oppCode = bitShift(instruction_f, 6, 26);
 	string oppCode_s = " ";
@@ -97,33 +111,62 @@ void iFormatf(int instruction_f)
 		cout << "Opp Code not recognized." << endl;
 		exit(0);
 	}
-	
+
+	int firstVar = bitShift(instruction_f, 5, 16);
+	int secondVar = bitShift(instruction_f, 5, 21);
 	int offset = bitShift(instruction_f, 16, 0);
-	int firstVar = bitShift(instruction_f, 4, 16);
-	int secondVar = bitShift(instruction_f, 4, 21);
+	if (oppCode_s == "Bne" || "Beq")
+		offset = offset + progCounter;
+
+
 	
 	//Instruction printout
-	//I print this in the format that was described by the instructions but I am aware that some print the offset after the values, just sayin'
-	cout << "First variable is $" << hex << firstVar << endl;
-	cout << "Offset = 0x" << hex << offset << endl;
-	cout << "Second variable is $" << hex << secondVar << endl;
-	cout << "Complete Instruction: " << oppCode_s << " $" << hex << firstVar << " 0x" << hex << offset << " $" << hex << secondVar << endl;
+	cout << "First variable is $" << dec << firstVar << endl;
+	cout << "Second variable is $" << dec << secondVar << endl;
+	cout << "Offset = " << dec << offset << endl;
+	cout << "Complete Instruction: " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar << " Offset of " << dec << offset << endl;
+	cout << "Program counter at: " << progCounter << endl << endl;
+	//increment the program counter
+	progCounter = progCounter + 0x4;
+	//compress program counter
+	progCounter = progCounter >> 2;
+	int main();
 }
-//main
-int main()
+
+void code(unsigned int instruction)
 {
-	int instruction = 0;
-	cout << "Enter the hex 32bit MIPS instruction: ";
-	cin >> hex >> instruction;
+	//cout << "Enter the hex 32bit MIPS instruction: ";
+	//cin >> hex >> instruction;
 
-	//the isntruction can also be placed here
-	//int instruction = 0x158FFFF6;
-
-	cout << "The hex instruction entered was: " << hex << instruction << endl;
+	cout << "The hex instruction input is: " << hex << instruction << endl;
 	//Check offset for 000000 and if return is true then the instruction is R format.
 	if (rCheck(instruction))
 		rFormatf(instruction);
-	iFormatf(instruction);
+	else 
+		iFormatf(instruction);
+}
 
-	return 0;
+//main
+int main()
+{
+	const int numValues = 11;
+	unsigned int hexValuesArr[numValues]{ 0x022DA822, 0x8EF30018, 0x12A70004, 0x02689820, 0xAD930018, 0x02697824, 0xAD8FFFF4,
+		0x018C6020, 0x02A4A825, 0x158FFFF6, 0x8E59FFF0 };
+
+	for (int i = 11; i != 0; --i)
+	{
+		unsigned int test = hexValuesArr[numValues - i];
+		code(test);
+	}
+/*
+	code();
+	bool again = 1;
+	cout << "Would you like to continue? 1 = yes 0 = no" << endl;
+	cin >> again;
+	while (again)
+	{
+		code();
+		cout << "Would you like to continue? 1 = yes 0 = no" << endl;
+		cin >> again;
+	}*/
 }

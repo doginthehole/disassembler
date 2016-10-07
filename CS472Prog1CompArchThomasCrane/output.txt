@@ -1,0 +1,83 @@
+The hex instruction input is: 22da822
+the oppCode is: Sub
+First variable is $21
+Second variable is $17
+Third variable is $13
+Complete Instruction: Sub $21 $17 $13
+Program counter at: 1999232
+
+The hex instruction input is: 8ef30018
+First variable is $19
+Second variable is $23
+Offset = 1999260
+Complete Instruction: Lw $19 $23 Offset of 1999260
+Program counter at: 1999236
+
+The hex instruction input is: 12a70004
+First variable is $7
+Second variable is $21
+Offset = 1999244
+Complete Instruction: Beq $7 $21 Offset of 1999244
+Program counter at: 1999240
+
+The hex instruction input is: 2689820
+the oppCode is: Add
+First variable is $19
+Second variable is $19
+Third variable is $8
+Complete Instruction: Add $19 $19 $8
+Program counter at: 1999244
+
+The hex instruction input is: ad930018
+First variable is $19
+Second variable is $12
+Offset = 1999272
+Complete Instruction: Sw $19 $12 Offset of 1999272
+Program counter at: 1999248
+
+The hex instruction input is: 2697824
+the oppCode is: And
+First variable is $15
+Second variable is $19
+Third variable is $9
+Complete Instruction: And $15 $19 $9
+Program counter at: 1999252
+
+The hex instruction input is: ad8ffff4
+First variable is $15
+Second variable is $12
+Offset = 2064780
+Complete Instruction: Sw $15 $12 Offset of 2064780
+Program counter at: 1999256
+
+The hex instruction input is: 18c6020
+the oppCode is: Add
+First variable is $12
+Second variable is $12
+Third variable is $12
+Complete Instruction: Add $12 $12 $12
+Program counter at: 1999260
+
+The hex instruction input is: 2a4a825
+the oppCode is: Or
+First variable is $21
+Second variable is $21
+Third variable is $4
+Complete Instruction: Or $21 $21 $4
+Program counter at: 1999264
+
+The hex instruction input is: 158ffff6
+First variable is $15
+Second variable is $12
+Offset = 2064794
+Complete Instruction: Bne $15 $12 Offset of 2064794
+Program counter at: 1999268
+
+The hex instruction input is: 8e59fff0
+First variable is $25
+Second variable is $18
+Offset = 2064792
+Complete Instruction: Lw $25 $18 Offset of 2064792
+Program counter at: 1999272
+
+Press any key to continue . . .
