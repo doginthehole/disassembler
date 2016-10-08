@@ -57,32 +57,32 @@ void rFormatf(int instruction_f)
 	int oppCode = bitShift(instruction_f, 6, 0);
 	string oppCode_s = " ";
 	if (oppCode == 0x20)
-		oppCode_s = "Add";
+		oppCode_s = "add";
 	else if (oppCode == 0x22)
-		oppCode_s = "Sub";
+		oppCode_s = "sub";
 	else if (oppCode == 0x25)
-		oppCode_s = "Or";
+		oppCode_s = "or";
 	else if (oppCode == 0x2A)
-		oppCode_s = "Slt";
+		oppCode_s = "slt";
 	else if (oppCode == 0x24)
-		oppCode_s = "And";
+		oppCode_s = "and";
 	else
 	{
 		cout << "Opp Code not recognized." << endl;
 		exit(0);
 	}
 
-	int firstVar = bitShift(instruction_f, 5, 11);
-	int secondVar = bitShift(instruction_f, 5, 21);
+	int firstVar = bitShift(instruction_f, 4, 11);
+	int secondVar = bitShift(instruction_f, 4, 21);
 	int thirdVar = bitShift(instruction_f, 5, 16);
 
 	//Instruction printout
-	cout << "the oppCode is: " << oppCode_s << endl;
-	cout << "First variable is $" << dec << firstVar << endl;
-	cout << "Second variable is $" << dec << secondVar << endl;
-	cout << "Third variable is $" << dec << thirdVar << endl;
-	cout << "Complete Instruction: " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar << " $" << dec << thirdVar << endl;
-	cout << "Program counter at: " << progCounter << endl << endl;
+	//cout << "the oppCode is: " << oppCode_s << endl;
+	//cout << "First variable is $" << dec << firstVar << endl;
+	//cout << "Second variable is $" << dec << secondVar << endl;
+	//cout << "Third variable is $" << dec << thirdVar << endl;
+	cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar << " $" << hex << thirdVar << endl << endl;
+	//cout << "Program counter at: " << hex << progCounter << endl << endl;
 	//increment the program counter
 	progCounter = progCounter + 0x4;
 	//compress program counter
@@ -94,40 +94,39 @@ void iFormatf(int instruction_f)
 {
 	//decompress program counter
 	progCounter = progCounter << 2;
+	string oppCode_s = " ";
+
+	int firstVar = bitShift(instruction_f, 4, 16);
+	int secondVar = bitShift(instruction_f, 4, 21);
+	int offset = bitShift(instruction_f, 16, 0);
 
 	//Check opp code and assign name to string
 	int oppCode = bitShift(instruction_f, 6, 26);
-	string oppCode_s = " ";
-	if (oppCode == 0x23)
-		oppCode_s = "Lw";
-	else if (oppCode == 0x2B)
-		oppCode_s = "Sw";
-	else if (oppCode == 0x4)
-		oppCode_s = "Beq";
-	else if (oppCode == 0x5)
-		oppCode_s = "Bne";
+
+	if (oppCode == 0x23) {
+		oppCode_s = "lw";
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " " << hex << offset << " ($" << hex << secondVar << ")" << endl << endl;
+	}
+	else if (oppCode == 0x2B){
+		oppCode_s = "sw";
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " " << hex << offset << " ($" << hex << secondVar << ")" << endl << endl;
+	}
+	else if (oppCode == 0x4) {
+		oppCode_s = "beq";
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar   << " $" << hex << secondVar << " " << hex << offset << endl << endl;
+	}
+	else if (oppCode == 0x5) {
+		oppCode_s = "bne";
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar<< " " << hex << offset << endl << endl;
+	}
 	else
 	{
 		cout << "Opp Code not recognized." << endl;
 		exit(0);
 	}
-
-	int firstVar = bitShift(instruction_f, 5, 16);
-	int secondVar = bitShift(instruction_f, 5, 21);
-	int offset = bitShift(instruction_f, 16, 0);
-	if (oppCode_s == "Bne" || "Beq")
-		offset = offset + progCounter;
-
-
-	
-	//Instruction printout
-	cout << "First variable is $" << dec << firstVar << endl;
-	cout << "Second variable is $" << dec << secondVar << endl;
-	cout << "Offset = " << dec << offset << endl;
-	cout << "Complete Instruction: " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar << " Offset of " << dec << offset << endl;
-	cout << "Program counter at: " << progCounter << endl << endl;
 	//increment the program counter
 	progCounter = progCounter + 0x4;
+
 	//compress program counter
 	progCounter = progCounter >> 2;
 	int main();
@@ -138,7 +137,7 @@ void code(unsigned int instruction)
 	//cout << "Enter the hex 32bit MIPS instruction: ";
 	//cin >> hex >> instruction;
 
-	cout << "The hex instruction input is: " << hex << instruction << endl;
+	//cout << "The hex instruction input is: " << hex << instruction << endl;
 	//Check offset for 000000 and if return is true then the instruction is R format.
 	if (rCheck(instruction))
 		rFormatf(instruction);
@@ -152,7 +151,7 @@ int main()
 	const int numValues = 11;
 	unsigned int hexValuesArr[numValues]{ 0x022DA822, 0x8EF30018, 0x12A70004, 0x02689820, 0xAD930018, 0x02697824, 0xAD8FFFF4,
 		0x018C6020, 0x02A4A825, 0x158FFFF6, 0x8E59FFF0 };
-
+	progCounter = progCounter >> 2;
 	for (int i = 11; i != 0; --i)
 	{
 		unsigned int test = hexValuesArr[numValues - i];
