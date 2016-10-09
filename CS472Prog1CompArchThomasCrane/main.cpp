@@ -81,7 +81,7 @@ void rFormatf(int instruction_f)
 	//cout << "First variable is $" << dec << firstVar << endl;
 	//cout << "Second variable is $" << dec << secondVar << endl;
 	//cout << "Third variable is $" << dec << thirdVar << endl;
-	cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar << " $" << hex << thirdVar << endl << endl;
+	cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar << " $" << dec << thirdVar << endl << endl;
 	//cout << "Program counter at: " << hex << progCounter << endl << endl;
 	//increment the program counter
 	progCounter = progCounter + 0x4;
@@ -105,19 +105,19 @@ void iFormatf(int instruction_f)
 
 	if (oppCode == 0x23) {
 		oppCode_s = "lw";
-		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " " << hex << offset << " ($" << hex << secondVar << ")" << endl << endl;
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << dec << firstVar << " " << dec << offset << " ($" << dec << secondVar << ")" << endl << endl;
 	}
 	else if (oppCode == 0x2B){
 		oppCode_s = "sw";
-		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " " << hex << offset << " ($" << hex << secondVar << ")" << endl << endl;
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << dec << firstVar << " " << dec << offset << " ($" << dec << secondVar << ")" << endl << endl;
 	}
 	else if (oppCode == 0x4) {
 		oppCode_s = "beq";
-		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar   << " $" << hex << secondVar << " " << hex << offset << endl << endl;
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << dec << firstVar   << " $" << dec << secondVar << " " << dec << offset << endl << endl;
 	}
 	else if (oppCode == 0x5) {
 		oppCode_s = "bne";
-		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << hex << firstVar << " $" << hex << secondVar<< " " << hex << offset << endl << endl;
+		cout << "Complete Instruction: " << hex << progCounter << " " << oppCode_s << " $" << dec << firstVar << " $" << dec << secondVar<< " " << dec << offset << endl << endl;
 	}
 	else
 	{
